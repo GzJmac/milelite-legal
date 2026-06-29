@@ -5,20 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MileLite</title>
     <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; color: #172033; background: #f7f3ea; }
-      main { max-width: 720px; margin: 0 auto; padding: 48px 20px; }
-      h1 { font-size: 40px; margin: 0 0 8px; }
-      p { line-height: 1.6; }
-      a { color: #0c7a5b; font-weight: 700; display: inline-block; margin-right: 16px; }
+      :root {
+        color-scheme: light;
+        --bg: #f7f3ea;
+        --panel: #ffffff;
+        --text: #172033;
+        --muted: #5f6b7a;
+        --line: #dde3ea;
+        --brand: #0c7a5b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 56px 20px 72px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 12px;
+      }
+      .brand img {
+        width: 84px;
+        height: 84px;
+      }
+      h1 {
+        font-size: 42px;
+        margin: 0 0 8px;
+      }
+      p {
+        line-height: 1.65;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 28px;
+        margin-top: 28px;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 22px;
+      }
+      a {
+        color: var(--brand);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      ul {
+        padding-left: 20px;
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>MileLite</h1>
-      <p>Simple mileage tracking for iPhone.</p>
-      <a href="./privacy.html">Privacy Policy</a>
-      <a href="./terms.html">Terms of Service</a>
-      <a href="./support.html">Support</a>
+      <div class="brand">
+        <img src="./logo.svg" alt="MileLite logo" />
+        <div>
+          <h1>MileLite</h1>
+          <p>Automatic mileage tracking for iPhone.</p>
+        </div>
+      </div>
+      <p>MileLite is a mileage-first iPhone app built for freelancers, contractors, hosts, and small businesses that want clean trip logging, review, syncing, and reporting without extra overhead.</p>
+      <div class="card">
+        <p>Current phase-one capabilities include automatic trip tracking, manual trip review, account sync across phones, Apple Maps trip search, odometer capture, and exportable mileage reporting.</p>
+        <ul>
+          <li>Sign in with Apple, Google, or email code</li>
+          <li>Business, personal, medical, and charity trip categories</li>
+          <li>Vehicle management and odometer history</li>
+          <li>Shared ledger sync on the same account across phones</li>
+        </ul>
+        <div class="links">
+          <a href="./privacy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms of Service</a>
+          <a href="./support.html">Support</a>
+        </div>
+      </div>
     </main>
   </body>
 </html>
