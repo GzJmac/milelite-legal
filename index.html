@@ -3,93 +3,286 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MileLite</title>
+    <meta name="theme-color" content="#f6f1e7" />
+    <meta name="description" content="MileLite helps people who drive for work capture trips, review mileage, and export clear records from iPhone." />
+    <title>MileLite — Mileage tracking that fits your workday</title>
     <style>
       :root {
         color-scheme: light;
-        --bg: #f7f3ea;
-        --panel: #ffffff;
-        --text: #172033;
-        --muted: #5f6b7a;
-        --line: #dde3ea;
-        --brand: #0c7a5b;
+        --page: #f6f1e7;
+        --paper: #fffaf2;
+        --ink: #172432;
+        --muted: #657286;
+        --line: #e6dccb;
+        --green: #087b5c;
+        --green-dark: #075b46;
+        --green-soft: #e6f1ea;
+        --gold: #d88939;
+        --shadow: 0 22px 60px rgba(43, 52, 49, .10);
       }
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         margin: 0;
-        color: var(--text);
-        background: var(--bg);
+        color: var(--ink);
+        background: var(--page);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
-      main {
-        max-width: 860px;
-        margin: 0 auto;
-        padding: 56px 20px 72px;
+      a { color: inherit; }
+      .wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+      header { padding: 20px 0; }
+      .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+      .brand img { width: 44px; height: 44px; }
+      .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
+      .nav-links { display: flex; align-items: center; gap: 26px; }
+      .nav-links a { color: var(--muted); font-size: 14px; font-weight: 650; text-decoration: none; }
+      .nav-links a:hover, .text-link:hover { color: var(--green-dark); }
+      .nav-links .nav-cta { color: var(--green); }
+      .hero { padding: 74px 0 78px; }
+      .hero-grid { display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; gap: 68px; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--green); font-size: 13px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+      .eyebrow::before { width: 8px; height: 8px; border-radius: 99px; background: var(--gold); content: ""; }
+      h1 { max-width: 640px; margin: 18px 0 18px; font-size: clamp(44px, 6.2vw, 72px); line-height: .99; letter-spacing: -.065em; }
+      .hero-copy { max-width: 570px; margin: 0; color: var(--muted); font-size: 19px; line-height: 1.6; }
+      .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 28px; }
+      .button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; border: 1px solid var(--green); border-radius: 14px; padding: 0 20px; background: var(--green); color: white; font-size: 15px; font-weight: 750; text-decoration: none; }
+      .button:hover { background: var(--green-dark); }
+      .text-link { color: var(--green); font-size: 14px; font-weight: 750; text-decoration: none; }
+      .launch-note { max-width: 500px; margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .preview { position: relative; border: 1px solid var(--line); border-radius: 28px; padding: 24px; background: var(--paper); box-shadow: var(--shadow); }
+      .preview::before { position: absolute; z-index: -1; top: -24px; right: -20px; width: 125px; height: 125px; border-radius: 32px; background: #e8eee4; content: ""; transform: rotate(8deg); }
+      .preview-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+      .preview-title { font-size: 16px; font-weight: 800; }
+      .status { border-radius: 99px; padding: 7px 10px; background: var(--green-soft); color: var(--green-dark); font-size: 11px; font-weight: 800; }
+      .trip { margin-top: 18px; border: 1px solid var(--line); border-radius: 19px; padding: 19px; background: white; }
+      .trip-kicker { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+      .trip-route { display: grid; grid-template-columns: 16px 1fr; gap: 12px; margin: 18px 0; }
+      .route-line { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3px 0; }
+      .route-line::before { position: absolute; top: 9px; bottom: 9px; width: 2px; background: #b8d7ca; content: ""; }
+      .pin { z-index: 1; width: 11px; height: 11px; border: 2px solid var(--green); border-radius: 50%; background: white; }
+      .route-stop { min-width: 0; }
+      .route-stop + .route-stop { margin-top: 16px; }
+      .route-stop strong { display: block; overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+      .route-stop span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+      .trip-footer { display: flex; align-items: end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .miles strong { display: block; font-size: 27px; letter-spacing: -.04em; }
+      .miles span { color: var(--muted); font-size: 12px; }
+      .review-chip { border: 1px solid var(--line); border-radius: 99px; padding: 9px 12px; color: var(--green-dark); font-size: 12px; font-weight: 750; }
+      .preview-caption { margin: 14px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+      .trust-row { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); background: rgba(255,250,242,.58); }
+      .trust-item { padding: 19px 24px; color: var(--muted); font-size: 13px; text-align: center; }
+      .trust-item + .trust-item { border-left: 1px solid var(--line); }
+      .trust-item strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 14px; }
+      section { padding: 82px 0; }
+      .section-heading { max-width: 650px; margin-bottom: 34px; }
+      .section-heading h2 { margin: 12px 0; font-size: clamp(32px, 4vw, 46px); letter-spacing: -.055em; line-height: 1.05; }
+      .section-heading p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
+      .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .feature { min-height: 218px; border: 1px solid var(--line); border-radius: 20px; padding: 24px; background: var(--paper); }
+      .feature-number { color: var(--green); font-size: 12px; font-weight: 850; letter-spacing: .1em; }
+      .feature h3 { margin: 28px 0 10px; font-size: 20px; letter-spacing: -.03em; }
+      .feature p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+      .workflow { background: #eaf0e9; }
+      .workflow-grid { display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: 64px; }
+      .workflow-list { display: grid; gap: 12px; }
+      .workflow-step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; border: 1px solid rgba(8,123,92,.14); border-radius: 17px; padding: 18px; background: rgba(255,255,255,.7); }
+      .step-number { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 13px; background: var(--green); color: white; font-weight: 800; }
+      .workflow-step strong { display: block; margin: 2px 0 5px; font-size: 15px; }
+      .workflow-step p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 740px; }
+      .plan { border: 1px solid var(--line); border-radius: 20px; padding: 25px; background: var(--paper); }
+      .plan.pro { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+      .plan-label { color: var(--muted); font-size: 12px; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+      .plan-price { margin: 12px 0 8px; font-size: 31px; font-weight: 850; letter-spacing: -.05em; }
+      .plan p { min-height: 42px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .pricing-note { max-width: 740px; margin-top: 16px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+      .trust { padding-top: 0; }
+      .trust-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 48px; border: 1px solid var(--line); border-radius: 24px; padding: 32px; background: var(--paper); }
+      .trust-panel h2 { margin: 0; font-size: 30px; letter-spacing: -.05em; }
+      .trust-panel p { margin: 0 0 12px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+      footer { border-top: 1px solid var(--line); padding: 25px 0 36px; }
+      .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+      .footer-copy { color: var(--muted); font-size: 12px; }
+      .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
+      .footer-links a { color: var(--muted); font-size: 12px; font-weight: 650; text-decoration: none; }
+      @media (max-width: 800px) {
+        .hero { padding: 48px 0 54px; }
+        .hero-grid, .workflow-grid, .trust-panel { grid-template-columns: 1fr; gap: 38px; }
+        .hero-grid { gap: 46px; }
+        .features { grid-template-columns: 1fr; }
+        .feature { min-height: auto; }
+        .feature h3 { margin-top: 18px; }
+        section { padding: 62px 0; }
+        .trust { padding-top: 0; }
       }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        margin-bottom: 12px;
-      }
-      .brand img {
-        width: 84px;
-        height: 84px;
-      }
-      h1 {
-        font-size: 42px;
-        margin: 0 0 8px;
-      }
-      p {
-        line-height: 1.65;
-      }
-      .card {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 28px;
-        margin-top: 28px;
-      }
-      .links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-top: 22px;
-      }
-      a {
-        color: var(--brand);
-        font-weight: 700;
-        text-decoration: none;
-      }
-      ul {
-        padding-left: 20px;
+      @media (max-width: 560px) {
+        .wrap { width: min(100% - 28px, 1120px); }
+        header { padding: 14px 0; }
+        .brand img { width: 38px; height: 38px; }
+        .nav-links { gap: 14px; }
+        .nav-links a { font-size: 12px; }
+        .nav-links a:nth-child(1) { display: none; }
+        h1 { font-size: clamp(43px, 13vw, 58px); }
+        .hero-copy { font-size: 17px; }
+        .preview { padding: 17px; border-radius: 22px; }
+        .trust-row { grid-template-columns: 1fr; }
+        .trust-item + .trust-item { border-top: 1px solid var(--line); border-left: 0; }
+        .pricing { grid-template-columns: 1fr; }
+        .plan p { min-height: auto; }
+        .trust-panel { padding: 23px; }
+        .footer-row { align-items: flex-start; flex-direction: column; }
       }
     </style>
   </head>
   <body>
-    <main>
-      <div class="brand">
-        <img src="./logo.svg" alt="MileLite logo" />
-        <div>
-          <h1>MileLite</h1>
-          <p>Automatic mileage tracking for iPhone.</p>
-        </div>
-      </div>
-      <p>MileLite is a mileage-first iPhone app built for freelancers, contractors, hosts, and small businesses that want clean trip logging, review, syncing, and reporting without extra overhead.</p>
-      <div class="card">
-        <p>Current phase-one capabilities include automatic trip tracking, manual trip review, account sync across phones, Apple Maps trip search, odometer capture, and exportable mileage reporting.</p>
-        <ul>
-          <li>Sign in with Apple, Google, or email code</li>
-          <li>Business, personal, medical, and charity trip categories</li>
-          <li>Vehicle management and odometer history</li>
-          <li>Shared ledger sync on the same account across phones</li>
-        </ul>
-        <div class="links">
-          <a href="./privacy.html">Privacy Policy</a>
-          <a href="./terms.html">Terms of Service</a>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="./" aria-label="MileLite home">
+          <img src="./logo.svg" alt="" />
+          <span class="brand-name">MileLite</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#how-it-works">How it works</a>
+          <a href="#plans">Plans</a>
           <a href="./support.html">Support</a>
-        </div>
+          <a class="nav-cta" href="./privacy.html">Privacy</a>
+        </nav>
       </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <div class="eyebrow">Mileage tracking for iPhone</div>
+            <h1>Keep your work miles in the picture.</h1>
+            <p class="hero-copy">MileLite helps freelancers, contractors, hosts, and small businesses capture drives, review the details, and keep a clearer mileage record.</p>
+            <div class="hero-actions">
+              <a class="button" href="#how-it-works">See how MileLite works</a>
+              <a class="text-link" href="./support.html">Questions? Visit support</a>
+            </div>
+            <p class="launch-note">MileLite’s public App Store release is being prepared. A download link will be added here when the app is available.</p>
+          </div>
+
+          <div class="preview" aria-label="Illustrative trip review preview">
+            <div class="preview-top">
+              <span class="preview-title">Trip review</span>
+              <span class="status">Ready for you</span>
+            </div>
+            <div class="trip">
+              <div class="trip-kicker">Example drive · Today</div>
+              <div class="trip-route">
+                <div class="route-line"><i class="pin"></i><i class="pin"></i></div>
+                <div>
+                  <div class="route-stop"><strong>Starting point</strong><span>Review or edit the location</span></div>
+                  <div class="route-stop"><strong>Destination</strong><span>Choose a place and trip purpose</span></div>
+                </div>
+              </div>
+              <div class="trip-footer">
+                <div class="miles"><strong>12.4 mi</strong><span>Example distance</span></div>
+                <span class="review-chip">Review trip</span>
+              </div>
+            </div>
+            <p class="preview-caption">Illustrative interface preview. Review trip details before relying on your records.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="trust-row" aria-label="MileLite highlights">
+        <div class="trust-item"><strong>Opt-in automatic tracking</strong>Background location is used only when you enable auto-track.</div>
+        <div class="trust-item"><strong>Trips stay reviewable</strong>Check the route, vehicle, purpose, and tags.</div>
+        <div class="trust-item"><strong>Built for real workdays</strong>Separate work, personal, medical, and charity drives.</div>
+      </div>
+
+      <section id="how-it-works">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="eyebrow">A simple routine</div>
+            <h2>Drive. Review. Keep moving.</h2>
+            <p>Let MileLite help with the repetitive logging, while you stay in control of what becomes part of your mileage record.</p>
+          </div>
+          <div class="features">
+            <article class="feature">
+              <div class="feature-number">01 / CAPTURE</div>
+              <h3>Let trips appear automatically</h3>
+              <p>Opt in to background location and MileLite can detect likely drives while the app is closed. You can turn auto-tracking off in Settings at any time.</p>
+            </article>
+            <article class="feature">
+              <div class="feature-number">02 / REVIEW</div>
+              <h3>Make the record yours</h3>
+              <p>Review trips in your Inbox. Set the purpose, vehicle, business, tags, notes, and locations; edit details before keeping the record.</p>
+            </article>
+            <article class="feature">
+              <div class="feature-number">03 / REPORT</div>
+              <h3>Export a clear mileage summary</h3>
+              <p>Choose a period and filter your mileage report. Review the figures and confirm applicable rates and tax treatment with official guidance or a qualified professional.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow">
+        <div class="wrap workflow-grid">
+          <div class="section-heading">
+            <div class="eyebrow">Made for drivers who work</div>
+            <h2>Less reconstructing your week from memory.</h2>
+            <p>Keep the essentials together without turning every drive into another task to manage.</p>
+          </div>
+          <div class="workflow-list">
+            <div class="workflow-step"><span class="step-number">1</span><div><strong>Separate different kinds of trips</strong><p>Mark a trip business, personal, medical, or charity, then add a note or tag when it helps.</p></div></div>
+            <div class="workflow-step"><span class="step-number">2</span><div><strong>Keep vehicles and odometer readings organized</strong><p>Manage multiple vehicles and keep odometer history with your mileage records.</p></div></div>
+            <div class="workflow-step"><span class="step-number">3</span><div><strong>Sync when you choose to sign in</strong><p>Sign in to sync your MileLite account across your own devices. Shared team or driver seats are not part of this release.</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plans">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="eyebrow">Straightforward plans</div>
+            <h2>Try your workflow before upgrading.</h2>
+            <p>Start free, then choose Pro only if you need more trip history and ongoing tracking.</p>
+          </div>
+          <div class="pricing">
+            <article class="plan">
+              <div class="plan-label">Free</div>
+              <div class="plan-price">20 trips</div>
+              <p>Up to 20 trips each month to try MileLite.</p>
+            </article>
+            <article class="plan pro">
+              <div class="plan-label">Pro</div>
+              <div class="plan-price">$4.99 / month</div>
+              <p>Or $44.99 / year for unlimited trip tracking and reporting.</p>
+            </article>
+          </div>
+          <p class="pricing-note">Prices shown are U.S. list prices and may vary by country or currency. The App Store purchase sheet displays the price and renewal terms before you subscribe. Deleting a MileLite account does not cancel an active App Store subscription.</p>
+        </div>
+      </section>
+
+      <section class="trust">
+        <div class="wrap trust-panel">
+          <h2>Your location is sensitive. We treat it that way.</h2>
+          <div>
+            <p>Automatic trip detection requires location permission. Background location is used only when you opt into auto-tracking; you can disable it in MileLite or revoke location access in iOS Settings.</p>
+            <p>Trip details are stored on your device and sync to MileLite’s cloud when you sign in. You can review, correct, export, or delete records. Read the full <a class="text-link" href="./privacy.html">Privacy Policy</a>.</p>
+            <p>MileLite provides mileage records and estimates, not tax, legal, or accounting advice. Verify current rates and eligibility with official sources before filing or reimbursement.</p>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      <div class="wrap footer-row">
+        <div class="footer-copy">MileLite · Mileage tracking for iPhone</div>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="./privacy.html">Privacy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="./support.html">Support</a>
+          <a href="mailto:support@milelite.app">Email support</a>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>
